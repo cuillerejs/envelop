@@ -182,7 +182,14 @@ export const useGenericAuth = <
                     executionArgs: args,
                   });
                   if (error) {
-                    context.reportError(error);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    const decoratedError = new GraphQLError(error.message, {
+                      nodes: fieldNode,
+                      originalError: error,
+                      path: context._typeInfo._fieldDefStack.map((field: any) => field.name),
+                    });
+                    context.reportError(decoratedError);
                   }
                 };
 
